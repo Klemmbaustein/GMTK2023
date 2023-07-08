@@ -1,0 +1,6 @@
+string back = Bricks
+string down = Bricks
+string front = Bricks
+string left = Bricks
+string right = Bricks
+string up = Bricks
