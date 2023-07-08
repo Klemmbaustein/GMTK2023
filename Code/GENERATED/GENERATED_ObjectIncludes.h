@@ -6,4 +6,5 @@
 #include <Objects/SoundObject.h>
 #include <Objects/DestructibleObject.h>
 #include <Objects/GameExit.h>
+#include <Objects/MenuObject.h>
 #include <Objects/PlayerObject.h>

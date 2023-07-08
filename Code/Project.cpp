@@ -8,5 +8,5 @@ char ProjectName[] = "GMTK-2023";
 std::string GetStartupScene()
 {
 	Console::ExecuteConsoleCommand("ssao=0");
-	return "MainScene";
+	return "Menu";
 }

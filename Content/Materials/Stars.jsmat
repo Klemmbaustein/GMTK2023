@@ -5,10 +5,10 @@ int UseShadowCutout = 0
 int IsTranslucent = 0
 string Template = Default
 // Material specific parameters:
-vector3 u_diffuse = 0.554929 0.781044 0.850617
+vector3 u_diffuse = 1.000000 1.000000 1.000000
 vector3 u_emissive = 
-float u_specularsize = 0.8
-float u_specularstrength = 5
+float u_specularsize = 0
+float u_specularstrength = 0
 int u_ssao_reverse = 1
-int u_usetexture = 0
-texture u_texture = 
+int u_usetexture = 1
+texture u_texture = Stars

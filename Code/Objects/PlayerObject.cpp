@@ -4,6 +4,9 @@
 #include <Objects/DestructibleObject.h>
 #include <Engine/Log.h>
 #include <Math/Collision/Collision.h>
+#include <Rendering/Camera/CameraShake.h>
+#include <Engine/EngineRandom.h>
+#include <Engine/Scene.h>
 
 std::vector<WorldObject*> AllDestructibles;
 PlayerObject* Player = nullptr;
@@ -23,6 +26,11 @@ void PlayerObject::TryMove(Vector3 Movement)
 	else
 	{
 		Velocity = glm::reflect((glm::vec3)Velocity, (glm::vec3)Hit.Normal) / 2;
+		if (ImpactTimer.TimeSinceCreation() >= 0.25)
+		{
+			Sound::PlaySound2D(ImpactSound, Random::GetRandomFloat(0.7, 1.3), 0.5);
+			ImpactTimer.Reset();
+		}
 	}
 }
 
@@ -43,6 +51,7 @@ void PlayerObject::Begin()
 	AttractBeam->Load("AttractBeam");
 
 	PlayerGameUI = UICanvas::CreateNewCanvas<GameUI>();
+	Input::CursorVisible = false;
 }
 
 void PlayerObject::Tick()
@@ -50,6 +59,22 @@ void PlayerObject::Tick()
 #if EDITOR
 	return;
 #endif
+
+	if (HasFinishedLevel)
+	{
+		GetTransform().Location.Y = 5 + Size + FadeoutTimer.TimeSinceCreation() * 15;
+		float Scale = DisplayedSize / 2 * std::max(1 - FadeoutTimer.TimeSinceCreation() / 2, 0.0f);
+		PlayerMesh->RelativeTransform.Scale = Scale;
+		PlayerMesh->RelativeTransform.Location = FadeoutTimer.TimeSinceCreation() * 25;
+		AttractBeam->RelativeTransform.Scale = 0;
+
+		if (FadeoutTimer.TimeSinceCreation() >= 4)
+		{
+			Scene::LoadNewScene("Level2");
+		}
+
+		return;
+	}
 
 	if (AllDestructibles.empty())
 	{
@@ -128,6 +153,7 @@ void PlayerObject::Tick()
 			Size += DestructibleObj->Reward * 0.15f;
 			ChangedSize = true;
 			DestructibleObj->SuckUp();
+			CameraShake::PlayDefaultCameraShake(0.5);
 		}
 		else if (dst < 5 && DestructibleObj)
 		{
@@ -146,4 +172,15 @@ void PlayerObject::Tick()
 void PlayerObject::Destroy()
 {
 	Player = nullptr;
+	delete ImpactSound;
+}
+
+void PlayerObject::FinishLevel()
+{
+	if (HasFinishedLevel)
+	{
+		return;
+	}
+	HasFinishedLevel = true;
+	FadeoutTimer.Reset();
 }

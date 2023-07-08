@@ -3,6 +3,7 @@
 #include <Engine/Log.h>
 #include <World/Stats.h>
 #include "PlayerObject.h"
+#include <Engine/EngineRandom.h>
 
 Sound::SoundBuffer* DestructibleObject::SuckUpSound = nullptr;
 
@@ -55,7 +56,7 @@ void DestructibleObject::Tick()
 		float Height = 20;
 		if (!IsSuckedUp)
 		{
-			Height = 10 - RequiredSize - PlayerObject::GetPlayer()->Size;
+			Height = 0;
 		}
 		PulledHeight = std::lerp(PulledHeight, Height, std::max(Performance::DeltaTime, 0.0f));
 		if (IsSuckedUp)
@@ -80,7 +81,7 @@ void DestructibleObject::Tick()
 
 void DestructibleObject::SuckUp()
 {
-	Sound::PlaySound2D(SuckUpSound);
+	Sound::PlaySound2D(SuckUpSound, Random::GetRandomFloat(0.8, 1.2), 0.25);
 	IsSuckedUp = true;
 	if (Collider)
 	{

@@ -17,6 +17,10 @@ void GameExit::Tick()
 	GetTransform().Rotation.Y += Performance::DeltaTime * 180;
 	if (PlayerObject::GetPlayer()->Progress == 1)
 	{
+		if (GetTransform().Scale == 0)
+		{
+			Sound::PlaySound2D(BeginSound, 1, 0.5);
+		}
 		GetTransform().Scale = Vector3::Clamp(GetTransform().Scale + Performance::DeltaTime * 10, 0, 10);
 
 		Vector3 PlayerPos2D = PlayerObject::GetPlayer()->GetTransform().Location;
@@ -24,14 +28,21 @@ void GameExit::Tick()
 		PlayerPos2D.Y = 0;
 		Pos2D.Y = 0;
 
-		if (Vector3::Distance(PlayerPos2D, Pos2D) <= 5)
+		if (Vector3::Distance(PlayerPos2D, Pos2D) <= 10)
 		{
-			Application::Quit();
+			PlayerObject::GetPlayer()->FinishLevel();
 		}
 	}
 	else
 	{
 		GetTransform().Scale = 0;
 	}
+#endif
+}
+
+void GameExit::Destroy()
+{
+#if !EDITOR
+	delete BeginSound;
 #endif
 }

@@ -6,4 +6,5 @@ case 3683110716: return (WorldObject*)SpawnObject<ParticleObject>(ObjectTransfor
 case 3990185315: return (WorldObject*)SpawnObject<SoundObject>(ObjectTransform); 
 case 475979376: return (WorldObject*)SpawnObject<DestructibleObject>(ObjectTransform); 
 case 1695359559: return (WorldObject*)SpawnObject<GameExit>(ObjectTransform); 
+case 1242262865: return (WorldObject*)SpawnObject<MenuObject>(ObjectTransform); 
 case 4230145047: return (WorldObject*)SpawnObject<PlayerObject>(ObjectTransform); 
