@@ -24,7 +24,6 @@ void GameExit::Tick()
 		PlayerPos2D.Y = 0;
 		Pos2D.Y = 0;
 
-		Log::Print(std::to_string(Vector3::Distance(PlayerPos2D, Pos2D)));
 		if (Vector3::Distance(PlayerPos2D, Pos2D) <= 5)
 		{
 			Application::Quit();
