@@ -1,0 +1,4 @@
+// Default material parameters:
+string VertexShader = basic.vert
+string FragmentShader = attract.frag
+// Material specific parameters:

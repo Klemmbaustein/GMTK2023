@@ -5,4 +5,5 @@ case 3359741227: return MeshObject::GetCategory();
 case 3683110716: return ParticleObject::GetCategory();
 case 3990185315: return SoundObject::GetCategory();
 case 475979376: return DestructibleObject::GetCategory();
+case 1695359559: return GameExit::GetCategory();
 case 4230145047: return PlayerObject::GetCategory();

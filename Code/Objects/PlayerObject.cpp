@@ -38,6 +38,9 @@ void PlayerObject::Begin()
 	PlayerMesh->Load("UFO");
 	Player = this;
 
+	AttractBeam = new MeshComponent();
+	Attach(AttractBeam);
+	AttractBeam->Load("AttractBeam");
 
 	PlayerGameUI = UICanvas::CreateNewCanvas<GameUI>();
 }
@@ -51,6 +54,7 @@ void PlayerObject::Tick()
 	if (AllDestructibles.empty())
 	{
 		AllDestructibles = Objects::GetAllObjectsWithID(DestructibleObject::GetID());
+		TotalNumObjects = AllDestructibles.size();
 	}
 
 	Vector3 ForwardRotation;
@@ -82,6 +86,7 @@ void PlayerObject::Tick()
 
 	TryMove(Velocity * Performance::DeltaTime);
 	PlayerMesh->RelativeTransform.Scale = DisplayedSize / 2;
+	AttractBeam->RelativeTransform.Scale = DisplayedSize / 2;
 
 	DisplayedSize = std::lerp(DisplayedSize, Size, std::clamp(Performance::DeltaTime * 2, 0.0f, 1.0f));
 
@@ -100,16 +105,21 @@ void PlayerObject::Tick()
 		}
 	}
 
+	AttractBeam->RelativeTransform.Rotation.Y += Performance::DeltaTime * 90;
 
 	Vector3 Pos2D = GetTransform().Location;
 	Pos2D.Y = 0;
 	bool ChangedSize = false;
+	size_t NumObj = 0;
 	for (WorldObject* obj : AllDestructibles)
 	{
 		DestructibleObject* DestructibleObj = dynamic_cast<DestructibleObject*>(obj);
 
 		if (DestructibleObj->IsSuckedUp)
 			continue;
+		NumObj++;
+
+
 
 		float dst = Vector3::Distance(Vector3(obj->GetTransform().Location.X, 0, obj->GetTransform().Location.Z), Pos2D);
 
@@ -128,6 +138,7 @@ void PlayerObject::Tick()
 	{
 		AllDestructibles = Objects::GetAllObjectsWithID(DestructibleObject::GetID());
 	}
+	Progress = 1 - (float)NumObj / (float)TotalNumObjects;
 
 	PlayerCamera->SetFOV(50);
 }

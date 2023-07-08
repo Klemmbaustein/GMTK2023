@@ -1,0 +1,7 @@
+// Default material parameters:
+string VertexShader = basic.vert
+string FragmentShader = attract.frag
+int UseShadowCutout = 0
+int IsTranslucent = 1
+string Template = AttractBeam
+// Material specific parameters:

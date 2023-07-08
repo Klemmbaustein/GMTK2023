@@ -13,13 +13,15 @@ GameUI::GameUI()
 
 	PlayerSizeText = new UIText(1, 1, "Size: 10%", Text);
 	TextContainer->AddChild(PlayerSizeText);
-	TextContainer->AddChild(new UIText(1, 1, "Helth: 69%", Text));
+	ProgressText = new UIText(1, 1, "Progress: 0%", Text);
+	TextContainer->AddChild(ProgressText);
 
 }
 
 void GameUI::Tick()
 {
 	PlayerSizeText->SetText("Size: " + std::to_string((int)(PlayerObject::GetPlayer()->DisplayedSize * 10)) + "%");
+	ProgressText->SetText("Progress: " + std::to_string((int)(PlayerObject::GetPlayer()->Progress * 100)) + "%");
 }
 
 GameUI::~GameUI()

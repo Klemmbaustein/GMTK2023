@@ -8,6 +8,7 @@
 class PlayerObject : public WorldObject
 {
 	MeshComponent* PlayerMesh = nullptr;
+	MeshComponent* AttractBeam = nullptr;
 	CameraComponent* PlayerCamera = nullptr;
 
 public:
@@ -21,6 +22,9 @@ public:
 	const float MaxSpeed = 100;
 	float Size = 1;
 	float DisplayedSize = Size;
+
+	size_t TotalNumObjects = 0;
+	float Progress = 0;
 
 	void TryMove(Vector3 Movement);
 

@@ -5,4 +5,5 @@
 #include <Objects/ParticleObject.h>
 #include <Objects/SoundObject.h>
 #include <Objects/DestructibleObject.h>
+#include <Objects/GameExit.h>
 #include <Objects/PlayerObject.h>
