@@ -173,6 +173,7 @@ void PlayerObject::Destroy()
 {
 	Player = nullptr;
 	delete ImpactSound;
+	AllDestructibles.clear();
 }
 
 void PlayerObject::FinishLevel()
