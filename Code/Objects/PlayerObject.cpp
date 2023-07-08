@@ -7,10 +7,11 @@
 #include <Rendering/Camera/CameraShake.h>
 #include <Engine/EngineRandom.h>
 #include <Engine/Scene.h>
+#include <UI/LevelEndUI.h>
 
 std::vector<WorldObject*> AllDestructibles;
 PlayerObject* Player = nullptr;
-
+size_t PlayerObject::Score = 0;
 PlayerObject* PlayerObject::GetPlayer()
 {
 	return Player;
@@ -26,10 +27,9 @@ void PlayerObject::TryMove(Vector3 Movement)
 	else
 	{
 		Velocity = glm::reflect((glm::vec3)Velocity, (glm::vec3)Hit.Normal) / 2;
-		if (ImpactTimer.TimeSinceCreation() >= 0.25)
+		if (Velocity.Length() >= 10)
 		{
-			Sound::PlaySound2D(ImpactSound, Random::GetRandomFloat(0.7, 1.3), 0.5);
-			ImpactTimer.Reset();
+			Sound::PlaySound2D(ImpactSound, Random::GetRandomFloat(0.7, 1.3), Velocity.Length() / 40);
 		}
 	}
 }
@@ -56,9 +56,10 @@ void PlayerObject::Begin()
 
 void PlayerObject::Tick()
 {
-#if EDITOR
-	return;
-#endif
+	if (IsInEditor || HasEnded)
+	{
+		return;
+	}
 
 	if (HasFinishedLevel)
 	{
@@ -68,9 +69,11 @@ void PlayerObject::Tick()
 		PlayerMesh->RelativeTransform.Location = FadeoutTimer.TimeSinceCreation() * 25;
 		AttractBeam->RelativeTransform.Scale = 0;
 
+
 		if (FadeoutTimer.TimeSinceCreation() >= 4)
 		{
-			Scene::LoadNewScene("Level2");
+			//UICanvas::CreateNewCanvas<LevelEndUI>();
+			HasEnded = true;
 		}
 
 		return;

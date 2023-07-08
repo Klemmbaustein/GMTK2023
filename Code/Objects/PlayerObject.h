@@ -13,23 +13,24 @@ class PlayerObject : public WorldObject
 	MeshComponent* AttractBeam = nullptr;
 	CameraComponent* PlayerCamera = nullptr;
 
-	Application::Timer ImpactTimer;
 
 	Sound::SoundBuffer* ImpactSound = Sound::LoadSound("Impact");
 
-	const float Acceleration = 200;
-	const float Deceleration = 200;
-	const float MaxSpeed = 100;
+	const float Acceleration = 400;
+	const float Deceleration = 400;
+	const float MaxSpeed = 50;
 	size_t TotalNumObjects = 0;
 	bool HasFinishedLevel = false;
 	Application::Timer FadeoutTimer;
-
+	bool HasEnded = false;
 public:
 	GameUI* PlayerGameUI = nullptr;
+	Application::Timer LevelTimer;
 	static PlayerObject* GetPlayer();
 
 	void FinishLevel();
 
+	static size_t Score;
 
 	Vector3 CameraOffset;
 	Vector3 Velocity;

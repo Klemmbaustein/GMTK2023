@@ -51,6 +51,7 @@ void DestructibleObject::Tick()
 	{
 		return;
 	}
+
 	if (IsPulled || IsSuckedUp)
 	{
 		float Height = 20;

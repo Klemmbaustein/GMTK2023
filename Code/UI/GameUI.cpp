@@ -20,8 +20,15 @@ GameUI::GameUI()
 
 void GameUI::Tick()
 {
+	if (!PlayerObject::GetPlayer())
+	{
+		delete this;
+		return;
+	}
+
 	PlayerSizeText->SetText("Size: " + std::to_string((int)(PlayerObject::GetPlayer()->DisplayedSize * 10)) + "%");
 	ProgressText->SetText("Progress: " + std::to_string((int)(PlayerObject::GetPlayer()->Progress * 100)) + "%");
+	
 }
 
 GameUI::~GameUI()

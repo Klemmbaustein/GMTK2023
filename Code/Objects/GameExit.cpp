@@ -13,6 +13,11 @@ void GameExit::Begin()
 void GameExit::Tick()
 {
 #if !EDITOR
+	if (!PlayerObject::GetPlayer())
+	{
+		return;
+	}
+
 	GetTransform().Location.Y = 30;
 	GetTransform().Rotation.Y += Performance::DeltaTime * 180;
 	if (PlayerObject::GetPlayer()->Progress == 1)
