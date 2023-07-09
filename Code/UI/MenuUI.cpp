@@ -10,6 +10,35 @@
 #include <UI/UIBackground.h>
 #include <Engine/Scene.h>
 #include <Objects/PlayerObject.h>
+#include <Engine/Save.h>
+
+const char* GameDescriptionText = "Oh no!\nThe alien invaders have destroyed your\nhome planetby sucking everything up with their\nspacecraft!\n\
+But now the roles are reversed.\nThe alien invaders want you to earn your\nfreedom by sucking up all valuables from\nanother planet.";
+
+void MenuUI::GenerateDescriptionText()
+{
+	UIBox* GameDescrBox = new UIBox(false, Vector2(0.4, 0.25));
+	GameDescrBox->Align = UIBox::E_REVERSE;
+
+	std::vector<std::string> Lines;
+	std::string NewLine;
+	for (char c : std::string(GameDescriptionText))
+	{
+		if (c == '\n')
+		{
+			Lines.push_back(NewLine);
+			NewLine.clear();
+			continue;
+		}
+		NewLine.append({c});
+	}
+	Lines.push_back(NewLine);
+
+	for (auto& i : Lines)
+	{
+		GameDescrBox->AddChild((new UIText(0.6, 1, i, Text))->SetPadding(0));
+	}
+}
 
 MenuUI::MenuUI()
 {
@@ -25,16 +54,18 @@ MenuUI::MenuUI()
 	std::map<int, std::string> GameOptions =
 	{
 		std::pair(1, "Play"),
-		std::pair(2, "Quit")
+		std::pair(2, "Fulscreen (F11)"),
+		std::pair(3, "Quit")
 	};
 	
-	UIBackground* bg = new UIBackground(false, 0, 0.1, Vector2(0.5, 1.5));
+	UIBackground* bg = new UIBackground(false, 0, 0.1, Vector2(0.5, 1));
 
 	bg	->SetOpacity(0.75)
-		->SetPosition(Vector2(-0.25, -0.75));
+		->SetBorder(UIBox::E_ROUNDED, 1)
+		->SetPosition(Vector2(-0.25, -0.5))
+		->AddChild(new UIText(2, 1, "Alien Invaders", Text))
+		->Align = UIBox::E_REVERSE;
 
-	bg->Align = UIBox::E_REVERSE;
-	bg->AddChild(new UIText(1, 1, "Cool logo here", Text));
 
 	for (auto& opt : GameOptions)
 	{
@@ -45,7 +76,17 @@ MenuUI::MenuUI()
 			->AddChild((new UIText(1, 0, opt.second, Text))));
 	}
 
+	SaveGame ScoreSave = SaveGame("Gameplay");
+	size_t HighScore = 0;
+	try
+	{
+		HighScore = std::stoi(ScoreSave.GetPropterty("HighScore").Value);
+	}
+	catch (std::exception& e) {}
+	bg->AddChild(new UIText(1, 1, std::format("High score: {}", HighScore), Text));
+
 	Input::CursorVisible = true;
+	GenerateDescriptionText();
 }
 
 MenuUI::~MenuUI()
@@ -61,11 +102,14 @@ void MenuUI::OnButtonClicked(int Index)
 		OS::OpenFile("https://itch.io/jam/gmtk-2023");
 		break;
 	case 1:
-		PlayerObject::CurrentLevel = 69;
-		PlayerObject::Score = 9999;
+		PlayerObject::CurrentLevel = 1;
+		PlayerObject::Score = 0;
 		Scene::LoadNewScene("Level1");
 		break;
 	case 2:
+		Application::SetFullScreen(!Application::GetFullScreen());
+		break;
+	case 3:
 		Application::Quit();
 		break;
 	default:

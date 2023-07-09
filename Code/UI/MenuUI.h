@@ -6,6 +6,7 @@ class TextRenderer;
 class MenuUI : public UICanvas
 {
 public:
+	void GenerateDescriptionText();
 	MenuUI();
 	~MenuUI();
 	TextRenderer* Text = nullptr;

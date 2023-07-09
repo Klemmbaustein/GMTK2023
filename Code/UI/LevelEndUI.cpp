@@ -128,7 +128,7 @@ void LevelEndUI::Tick()
 
 				HighScore = std::max(PlayerObject::Score, HighScore);
 				HighScoreText->SetText(std::format("High score: {} {}", HighScore, HighScore == PlayerObject::Score ? "(New)" : ""));
-				HighScoreDescr->SetText(std::format("The hivemind says: {}", GetResultFromScore(PlayerObject::Score)));
+				HighScoreDescr->SetText(std::format("The alien invaders say: {}", GetResultFromScore(PlayerObject::Score)));
 				ScoreSave.SetPropterty(SaveGame::SaveProperty("HighScore", std::to_string(PlayerObject::Score), Type::E_INT));
 				TimerDownTick = 5;
 				PlayerObject::Score = TargetScore;
