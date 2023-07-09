@@ -5,6 +5,34 @@
 #include <format>
 #include <Engine/Scene.h>
 #include <Engine/EngineRandom.h>
+#include <World/Assets.h>
+#include <filesystem>
+#include <Engine/Save.h>
+
+const std::map<const size_t, const std::string> Results =
+{
+	std::pair(600, "Perfect"),
+	std::pair(550, "Great"),
+	std::pair(550, "Good"),
+	std::pair(500, "Ok"),
+	std::pair(450, "Slow"),
+	std::pair(300, "Very slow"),
+	std::pair(200, "Bad"),
+	std::pair(0, "Very bad"),
+};
+
+const std::string GetResultFromScore(size_t Score)
+{
+	std::string HighestScore;
+	for (auto& i : Results)
+	{
+		if (Score >= i.first)
+		{
+			HighestScore = i.second;
+		}
+	}
+	return HighestScore;
+}
 
 LevelEndUI::LevelEndUI()
 {
@@ -14,13 +42,26 @@ LevelEndUI::LevelEndUI()
 
 	SecondsText = new UIText(1, 1, "Time: ???", Text);
 	ScoreText = new UIText(1, 1, "Score: ???", Text);
+	HighScoreText = new UIText(1.5, 1, "", Text);
+	HighScoreDescr = new UIText(1, 1, "", Text);
 	UIBox* EndUI = new UIBox(false, 0);
+
+	IsLastLevel = !std::filesystem::exists(Assets::GetAsset(std::format("Level{}.jscn", PlayerObject::CurrentLevel + 1)));
 
 	EndUI->SetPadding(0)
 		->SetMinSize(1)
-		->AddChild(new UIText(2, 1, std::format("Level {} complete!", PlayerObject::CurrentLevel), Text))
-		->AddChild(SecondsText)
-		->AddChild(ScoreText);
+		->AddChild((new UIText(2, 1, std::format("Level {} complete!", PlayerObject::CurrentLevel), Text))->SetPadding(0.005))
+		->AddChild((new UIBackground(true, 0, 1, Vector2(1, 0.005)))->SetPadding(0.01, 0.01, 0.005, 0.005))
+		->AddChild(SecondsText->SetPadding(0.005))
+		->AddChild(ScoreText->SetPadding(0.005));
+
+	if (IsLastLevel)
+	{
+		EndUI
+			->AddChild(HighScoreDescr->SetPadding(0.005))
+			->AddChild((new UIBackground(true, 0, 1, Vector2(1, 0.005)))->SetPadding(0.01, 0.01, 0.005, 0.005))
+			->AddChild(HighScoreText->SetPadding(0.005));
+	}
 
 	EndUI->Align = UIBox::E_REVERSE;
 
@@ -58,7 +99,14 @@ void LevelEndUI::Tick()
 		
 		if (ScreenEnded)
 		{
-			Scene::LoadNewScene(std::format("Level{}", ++PlayerObject::CurrentLevel));
+			if (!IsLastLevel)
+			{
+				Scene::LoadNewScene(std::format("Level{}", ++PlayerObject::CurrentLevel));
+			}
+			else
+			{
+				Scene::LoadNewScene("Menu");
+			}
 		}
 
 		if (TargetScore > PlayerObject::Score)
@@ -68,9 +116,29 @@ void LevelEndUI::Tick()
 		}
 		else
 		{
+			if (IsLastLevel)
+			{
+				SaveGame ScoreSave = SaveGame("Gameplay");
+				size_t HighScore = 0;
+				try
+				{
+					HighScore = std::stoi(ScoreSave.GetPropterty("HighScore").Value);
+				}
+				catch (std::exception& e) {}
+
+				HighScore = std::max(PlayerObject::Score, HighScore);
+				HighScoreText->SetText(std::format("High score: {} {}", HighScore, HighScore == PlayerObject::Score ? "(New)" : ""));
+				HighScoreDescr->SetText(std::format("The hivemind says: {}", GetResultFromScore(PlayerObject::Score)));
+				ScoreSave.SetPropterty(SaveGame::SaveProperty("HighScore", std::to_string(PlayerObject::Score), Type::E_INT));
+				TimerDownTick = 5;
+				PlayerObject::Score = TargetScore;
+				ScreenEnded = true;
+				return;
+			}
+			
 			PlayerObject::Score = TargetScore;
 			ScreenEnded = true;
-			TimerDownTick = 0.5;
+			TimerDownTick = 1.5;
 		}
 	}
 	else

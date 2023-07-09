@@ -9,6 +9,7 @@
 #include <Engine/EngineProperties.h>
 #include <UI/UIBackground.h>
 #include <Engine/Scene.h>
+#include <Objects/PlayerObject.h>
 
 MenuUI::MenuUI()
 {
@@ -60,6 +61,8 @@ void MenuUI::OnButtonClicked(int Index)
 		OS::OpenFile("https://itch.io/jam/gmtk-2023");
 		break;
 	case 1:
+		PlayerObject::CurrentLevel = 69;
+		PlayerObject::Score = 9999;
 		Scene::LoadNewScene("Level1");
 		break;
 	case 2:

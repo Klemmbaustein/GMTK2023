@@ -10,6 +10,9 @@ class LevelEndUI : public UICanvas
 	TextRenderer* Text = nullptr;
 	UIText* SecondsText = nullptr;
 	UIText* ScoreText = nullptr;
+	UIText* HighScoreText = nullptr;
+	UIText* HighScoreDescr = nullptr;
+	bool IsLastLevel = false;
 	size_t Seconds = 0;
 	size_t TargetScore = 0;
 	float TimerDownTick = 1;
