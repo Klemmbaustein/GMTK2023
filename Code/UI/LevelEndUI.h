@@ -2,6 +2,7 @@
 #include <UI/Default/UICanvas.h>
 #include <UI/UIBackground.h>
 #include <UI/UIText.h>
+#include <Sound/Sound.h>
 
 class LevelEndUI : public UICanvas
 {
@@ -13,6 +14,8 @@ class LevelEndUI : public UICanvas
 	size_t TargetScore = 0;
 	float TimerDownTick = 1;
 	bool ScreenEnded = false;
+	Sound::SoundBuffer* EndSound = Sound::LoadSound("EndScreen");
+	Sound::SoundBuffer* TickSound = Sound::LoadSound("TickSound");
 public:
 	LevelEndUI();
 	~LevelEndUI();

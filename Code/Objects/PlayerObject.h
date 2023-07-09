@@ -27,7 +27,7 @@ public:
 	GameUI* PlayerGameUI = nullptr;
 	Application::Timer LevelTimer;
 	static PlayerObject* GetPlayer();
-
+	static int16_t CurrentLevel;
 	void FinishLevel();
 
 	static size_t Score;

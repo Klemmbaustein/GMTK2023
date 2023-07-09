@@ -12,6 +12,7 @@
 std::vector<WorldObject*> AllDestructibles;
 PlayerObject* Player = nullptr;
 size_t PlayerObject::Score = 0;
+int16_t PlayerObject::CurrentLevel = 1;
 PlayerObject* PlayerObject::GetPlayer()
 {
 	return Player;
@@ -20,7 +21,7 @@ PlayerObject* PlayerObject::GetPlayer()
 void PlayerObject::TryMove(Vector3 Movement)
 {
 	Collision::HitResponse Hit = Collision::LineTrace(GetTransform().Location, GetTransform().Location + Movement);
-	if (!Hit.Hit)
+	if (!Hit.Hit && Vector3::NearlyEqual(GetTransform().Location + Movement, 0, 350))
 	{
 		GetTransform().Location += Movement;
 	}
@@ -72,7 +73,7 @@ void PlayerObject::Tick()
 
 		if (FadeoutTimer.TimeSinceCreation() >= 4)
 		{
-			//UICanvas::CreateNewCanvas<LevelEndUI>();
+			UICanvas::CreateNewCanvas<LevelEndUI>();
 			HasEnded = true;
 		}
 
@@ -156,7 +157,7 @@ void PlayerObject::Tick()
 			Size += DestructibleObj->Reward * 0.15f;
 			ChangedSize = true;
 			DestructibleObj->SuckUp();
-			CameraShake::PlayDefaultCameraShake(0.5);
+			CameraShake::PlayDefaultCameraShake(0.25);
 		}
 		else if (dst < 5 && DestructibleObj)
 		{

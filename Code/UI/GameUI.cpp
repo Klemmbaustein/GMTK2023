@@ -1,6 +1,7 @@
 #include "GameUI.h"
 #include <Objects/PlayerObject.h>
 #include <UI/UIBackground.h>
+#include <format>
 
 GameUI::GameUI()
 {
@@ -11,11 +12,12 @@ GameUI::GameUI()
 	UIBox* TextContainer = (new UIBox(true, 0))->SetPadding(0);
 	TextBackground->AddChild(TextContainer);
 
-	PlayerSizeText = new UIText(1, 1, "Size: 10%", Text);
-	TextContainer->AddChild(PlayerSizeText);
+	TimerText = new UIText(1, 1, "Size: 10%", Text);
+	TextContainer->AddChild(TimerText);
 	ProgressText = new UIText(1, 1, "Progress: 0%", Text);
 	TextContainer->AddChild(ProgressText);
-
+	ScoreText = new UIText(1, 1, std::format("Score: {}", PlayerObject::Score), Text);
+	TextContainer->AddChild(ScoreText);
 }
 
 void GameUI::Tick()
@@ -26,7 +28,17 @@ void GameUI::Tick()
 		return;
 	}
 
-	PlayerSizeText->SetText("Size: " + std::to_string((int)(PlayerObject::GetPlayer()->DisplayedSize * 10)) + "%");
+	int32_t Seconds = PlayerObject::GetPlayer()->LevelTimer.TimeSinceCreation();
+	std::string SecondsString = std::to_string(Seconds % 60);
+	if (SecondsString.size() == 1)
+	{
+		SecondsString = std::format("0{}", SecondsString);
+	}
+
+	std::string TimeString = std::format("Time: {}:{}", Seconds / 60, SecondsString);
+
+
+	TimerText->SetText(TimeString);
 	ProgressText->SetText("Progress: " + std::to_string((int)(PlayerObject::GetPlayer()->Progress * 100)) + "%");
 	
 }

@@ -4,8 +4,9 @@
 
 class GameUI : public UICanvas
 {
-	UIText* PlayerSizeText = nullptr;
+	UIText* TimerText = nullptr;
 	UIText* ProgressText = nullptr;
+	UIText* ScoreText = nullptr;
 public:
 	GameUI();
 	void Tick() override;
