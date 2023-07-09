@@ -12,7 +12,7 @@
 #include <Objects/PlayerObject.h>
 #include <Engine/Save.h>
 
-const char* GameDescriptionText = "Oh no!\nThe alien invaders have destroyed your\nhome planetby sucking everything up with their\nspacecraft!\n\
+const char* GameDescriptionText = "Oh no!\nThe alien invaders have destroyed your\nhome planet by sucking everything up with their\nspacecraft!\n\
 But now the roles are reversed.\nThe alien invaders want you to earn your\nfreedom by sucking up all valuables from\nanother planet.";
 
 void MenuUI::GenerateDescriptionText()
