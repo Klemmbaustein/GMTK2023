@@ -1,5 +1,5 @@
 # Alien invaders
-aka `GMTK2023` in some project files.
+> aka `GMTK2023` in some project files.
 
 A Game made for the GMTK Game Jam 2023 in 48 hours.
 
