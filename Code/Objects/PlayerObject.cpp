@@ -128,7 +128,7 @@ void PlayerObject::Tick()
 	{
 		Velocity -= Velocity.Normalize() * Performance::DeltaTime * Deceleration;
 
-		if (Vector3::NearlyEqual(Velocity, 0, 1))
+		if (Vector3::NearlyEqual(Velocity, Vector3(0), 1))
 		{
 			Velocity = 0;
 		}
@@ -146,9 +146,8 @@ void PlayerObject::Tick()
 
 		if (DestructibleObj->IsSuckedUp)
 			continue;
+
 		NumObj++;
-
-
 
 		float dst = Vector3::Distance(Vector3(obj->GetTransform().Location.X, 0, obj->GetTransform().Location.Z), Pos2D);
 
